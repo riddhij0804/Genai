@@ -31,6 +31,21 @@ export function AuthProvider({ children }) {
     }
   };
 
+  const getUserProfile = async (userId) => {
+  try {
+    const docRef = doc(db, 'userProfiles', userId);
+    const docSnap = await getDoc(docRef);
+    
+    if (docSnap.exists()) {
+      return docSnap.data();
+    }
+    return null;
+  } catch (error) {
+    console.error('Error getting user profile:', error);
+    return null;
+  }
+};
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => { // ADD async
       setUser(firebaseUser);
@@ -51,10 +66,11 @@ export function AuthProvider({ children }) {
     <AuthContext.Provider value={{ 
       user, 
       logout,
-      userProfile, // ADD THIS
-      profileCompleted, // ADD THIS
-      setProfileCompleted, // ADD THIS
-      checkProfileCompletion // ADD THIS
+      userProfile, 
+      profileCompleted,
+      setProfileCompleted, 
+      getUserProfile,
+      checkProfileCompletion 
     }}>
       {children}
     </AuthContext.Provider>
