@@ -1112,97 +1112,97 @@ const renderPersonalDetails = () => (
 
   if (!isOpen) return null;
 
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4">
-      <div className="bg-gradient-to-br from-indigo-50 via-white to-purple-50 rounded-2xl max-w-5xl w-full max-h-[95vh] overflow-y-auto shadow-2xl border border-indigo-200">
-        <div className="p-8">
-          {/* Header */}
-          <div className="flex justify-between items-center mb-8">
-            <div>
-              <h1 className="text-4xl font-bold text-gray-900">Complete Your Profile</h1>
-              <p className="text-gray-600 mt-2">Help us create your personalized career roadmap</p>
+return (
+  <div className="fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-60 z-50 flex items-center justify-center p-4">
+    <div className="bg-gradient-to-br from-indigo-50 via-white to-purple-50 rounded-2xl w-full max-w-5xl h-[95vh] shadow-2xl border border-indigo-200 flex flex-col overflow-hidden">
+      <div className="flex-1 overflow-y-auto p-8">
+        {/* Header */}
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h1 className="text-4xl font-bold text-gray-900">Complete Your Profile</h1>
+            <p className="text-gray-600 mt-2">Help us create your personalized career roadmap</p>
+          </div>
+          <div className="flex gap-3">
+            <button
+              onClick={handleSkip}
+              disabled={isSubmitting}
+              className="px-6 py-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Skip for now
+            </button>
+            <button
+              onClick={handleClose}
+              disabled={isSubmitting}
+              className="text-gray-400 hover:text-gray-600 text-3xl font-bold w-10 h-10 flex items-center justify-center hover:bg-gray-100 rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              ×
+            </button>
+          </div>
+        </div>
+
+        {/* Progress Bar */}
+        <div className="mb-10">
+          <div className="flex justify-between items-center mb-3">
+            <span className="text-sm font-semibold text-gray-700">Step {currentStep + 1} of 6</span>
+            <span className="text-sm font-semibold text-blue-600">{Math.round(((currentStep + 1) / 6) * 100)}% Complete</span>
+          </div>
+          <div className="w-full bg-gray-200 rounded-full h-3 shadow-inner">
+            <div
+              className="bg-gradient-to-r from-blue-500 to-blue-600 h-3 rounded-full transition-all duration-500 ease-out shadow-sm"
+              style={{ width: `${((currentStep + 1) / 6) * 100}%` }}
+            ></div>
+          </div>
+        </div>
+
+        {/* Current Step Content */}
+        <div className="mb-10">
+          {renderCurrentStep()}
+        </div>
+
+        {/* Navigation Buttons */}
+        {currentStep < 5 && (
+          <div className="flex justify-between">
+            <button
+              onClick={prevStep}
+              disabled={currentStep === 0 || isSubmitting}
+              className="px-8 py-3 border-2 border-gray-300 rounded-xl font-semibold text-gray-700 hover:border-gray-400 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white transition-colors"
+            >
+              ← Back
+            </button>
+            <button
+              onClick={nextStep}
+              disabled={!isStepValid() || isSubmitting}
+              className="px-8 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl font-semibold hover:from-blue-700 hover:to-blue-800 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:from-blue-600 disabled:hover:to-blue-700 transition-all duration-200 shadow-lg"
+            >
+              Next →
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+
+    {/* Success Popup */}
+    {showSuccessPopup && (
+      <div className="fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-70 flex items-center justify-center z-[60]">
+        <div className="bg-white rounded-3xl p-8 max-w-md w-full mx-4 shadow-2xl transform animate-pulse">
+          <div className="text-center">
+            <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg className="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+              </svg>
             </div>
-            <div className="flex gap-3">
-              <button
-                onClick={handleSkip}
-                disabled={isSubmitting}
-                className="px-6 py-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                Skip for now
-              </button>
-              <button
-                onClick={handleClose}
-                disabled={isSubmitting}
-                className="text-gray-400 hover:text-gray-600 text-3xl font-bold w-10 h-10 flex items-center justify-center hover:bg-gray-100 rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                ×
-              </button>
+            <h3 className="text-2xl font-bold text-gray-900 mb-2">Profile Saved Successfully! 🎉</h3>
+            <p className="text-gray-600 mb-4">Your career profile has been created. Get ready for personalized recommendations!</p>
+            <div className="flex items-center justify-center">
+              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-green-600"></div>
+              <span className="ml-2 text-sm text-gray-500">Redirecting...</span>
             </div>
           </div>
-
-          {/* Progress Bar */}
-          <div className="mb-10">
-            <div className="flex justify-between items-center mb-3">
-              <span className="text-sm font-semibold text-gray-700">Step {currentStep + 1} of 6</span>
-              <span className="text-sm font-semibold text-blue-600">{Math.round(((currentStep + 1) / 6) * 100)}% Complete</span>
-            </div>
-            <div className="w-full bg-gray-200 rounded-full h-3 shadow-inner">
-              <div
-                className="bg-gradient-to-r from-blue-500 to-blue-600 h-3 rounded-full transition-all duration-500 ease-out shadow-sm"
-                style={{ width: `${((currentStep + 1) / 6) * 100}%` }}
-              ></div>
-            </div>
-          </div>
-
-          {/* Current Step Content */}
-          <div className="mb-10">
-            {renderCurrentStep()}
-          </div>
-
-          {/* Navigation Buttons */}
-          {currentStep < 5 && (
-            <div className="flex justify-between">
-              <button
-                onClick={prevStep}
-                disabled={currentStep === 0 || isSubmitting}
-                className="px-8 py-3 border-2 border-gray-300 rounded-xl font-semibold text-gray-700 hover:border-gray-400 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white transition-colors"
-              >
-                ← Back
-              </button>
-              <button
-                onClick={nextStep}
-                disabled={!isStepValid() || isSubmitting}
-                className="px-8 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl font-semibold hover:from-blue-700 hover:to-blue-800 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:from-blue-600 disabled:hover:to-blue-700 transition-all duration-200 shadow-lg"
-              >
-                Next →
-              </button>
-            </div>
-          )}
         </div>
       </div>
-
-      {/* SUCCESS POPUP - ADD THIS */}
-      {showSuccessPopup && (
-        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-[60]">
-          <div className="bg-white rounded-3xl p-8 max-w-md w-full mx-4 shadow-2xl transform animate-pulse">
-            <div className="text-center">
-              <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg className="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                </svg>
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">Profile Saved Successfully! 🎉</h3>
-              <p className="text-gray-600 mb-4">Your career profile has been created. Get ready for personalized recommendations!</p>
-              <div className="flex items-center justify-center">
-                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-green-600"></div>
-                <span className="ml-2 text-sm text-gray-500">Redirecting...</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-  );
+    )}
+  </div>
+);
 };
 
 export default ProfileModal;
