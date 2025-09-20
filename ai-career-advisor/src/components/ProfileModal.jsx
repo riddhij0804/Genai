@@ -109,20 +109,31 @@ const ProfileModal = ({ isOpen, onClose, onSkip }) => {
   };
 
   const nextStep = () => {
-    if (currentStep < 5) {
-      setCurrentStep(currentStep + 1);
-      // Scroll to top when moving to next step
-      document.querySelector('.overflow-y-auto').scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  };
+  if (currentStep < 5) {
+    setCurrentStep(currentStep + 1);
+    // Scroll to top when moving to next step
+    setTimeout(() => {
+      const modalContent = document.querySelector('.overflow-y-auto');
+      if (modalContent) {
+        modalContent.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }, 100);
+  }
+};
 
   const prevStep = () => {
-    if (currentStep > 0) {
-      setCurrentStep(currentStep - 1);
-    }
-  };
+  if (currentStep > 0) {
+    setCurrentStep(currentStep - 1);
+    // Scroll to top when moving to previous step
+    setTimeout(() => {
+      const modalContent = document.querySelector('.overflow-y-auto');
+      if (modalContent) {
+        modalContent.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }, 100);
+  }
+};
 
-  
   const handleSubmit = async () => {
   setIsSubmitting(true);
   try {
@@ -266,14 +277,20 @@ const renderPersonalDetails = () => (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       <div className="md:col-span-2">
         <label className="block text-sm font-semibold text-gray-700 mb-2">Full Name *</label>
-        <input
-          type="text"
-          value={formData.fullName}
-          onChange={(e) => updateFormData('fullName', e.target.value)}
-          className="w-full p-3 border-2 rounded-lg focus:border-blue-500 focus:outline-none transition-colors"
-          placeholder="Enter your full name"
-          required
-        />
+       <input
+  type="text"
+  value={formData.fullName}
+  onChange={(e) => {
+    const value = e.target.value;
+    // Allow only letters and spaces
+    if (/^[a-zA-Z\s]*$/.test(value)) {
+      updateFormData('fullName', value);
+    }
+  }}
+  className="w-full p-3 border-2 rounded-lg focus:border-blue-500 focus:outline-none transition-colors"
+  placeholder="Enter your full name"
+  required
+/>
       </div>
       <div>
         <label className="block text-sm font-semibold text-gray-700 mb-2">Age *</label>
@@ -315,13 +332,13 @@ const renderPersonalDetails = () => (
         />
       </div>
       <div>
-        <label className="block text-sm font-semibold text-gray-700 mb-2">Email / Contact</label>
+        <label className="block text-sm font-semibold text-gray-700 mb-2">Email</label>
         <input
           type="email"
           value={formData.email}
           onChange={(e) => updateFormData('email', e.target.value)}
           className="w-full p-3 border-2 rounded-lg focus:border-blue-500 focus:outline-none transition-colors"
-          placeholder="For saving progress"
+          placeholder="Enter your email"
         />
       </div>
     </div>
