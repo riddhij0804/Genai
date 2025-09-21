@@ -990,130 +990,179 @@ const renderPersonalDetails = () => (
   };
 
   const renderReviewAndSubmit = () => (
-    <div className="space-y-6">
-      <div className="text-center mb-6">
-        <h2 className="text-3xl font-bold text-gray-800 mb-2">Review & Submit</h2>
-        <p className="text-gray-600">Please review your information before submitting</p>
-      </div>
+  <div className="space-y-6">
+    <div className="text-center mb-6">
+      <h2 className="text-3xl font-bold text-gray-800 mb-2">Review & Submit</h2>
+      <p className="text-gray-600">Please review your information before submitting</p>
+    </div>
+    
+    <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 rounded-xl border border-blue-200">
+      <h3 className="font-bold text-xl mb-6 text-gray-800 flex items-center">
+        <span className="bg-blue-100 p-2 rounded-full mr-3">📋</span>
+        Profile Summary
+      </h3>
       
-      <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 rounded-xl border border-blue-200">
-        <h3 className="font-bold text-xl mb-6 text-gray-800 flex items-center">
-          <span className="bg-blue-100 p-2 rounded-full mr-3">📋</span>
-          Profile Summary
-        </h3>
-        
-        <div className="grid gap-6">
+      <div className="grid gap-6">
+        <div className="bg-white p-5 rounded-lg shadow-sm border border-gray-200">
+          <h4 className="font-semibold text-blue-900 mb-3 flex items-center">
+            <span className="mr-2">👤</span>Personal Details
+          </h4>
+          <div className="space-y-2">
+            <p><span className="font-medium">Stage:</span> {stage}</p>
+            {formData.fullName && <p><span className="font-medium">Name:</span> {formData.fullName}</p>}
+            {formData.age && <p><span className="font-medium">Age:</span> {formData.age}</p>}
+            {formData.dateOfBirth && <p><span className="font-medium">Date of Birth:</span> {formData.dateOfBirth}</p>}
+            {formData.city && <p><span className="font-medium">City:</span> {formData.city}</p>}
+            {formData.email && <p><span className="font-medium">Email:</span> {formData.email}</p>}
+          </div>
+        </div>
+
+        {stage === 'School' && (
           <div className="bg-white p-5 rounded-lg shadow-sm border border-gray-200">
             <h4 className="font-semibold text-blue-900 mb-3 flex items-center">
-              <span className="mr-2">👤</span>Personal Details
+              <span className="mr-2">🎓</span>Education & Background
             </h4>
             <div className="space-y-2">
-              <p><span className="font-medium">Stage:</span> {stage}</p>
-              <p><span className="font-medium">Name:</span> {formData.fullName}</p>
-              <p><span className="font-medium">Age:</span> {formData.age}</p>
-              {formData.city && <p><span className="font-medium">City:</span> {formData.city}</p>}
-              {formData.email && <p><span className="font-medium">Email:</span> {formData.email}</p>}
+              {formData.currentGrade && <p><span className="font-medium">Grade:</span> {formData.currentGrade}th Grade</p>}
+              {formData.favoriteSubjects.length > 0 && (
+                <p><span className="font-medium">Favorite Subjects:</span> {formData.favoriteSubjects.join(', ')}</p>
+              )}
+              {formData.streamsInterested.length > 0 && (
+                <p><span className="font-medium">Streams:</span> {formData.streamsInterested.join(', ')}</p>
+              )}
+              {formData.academicStrengths.length > 0 && (
+                <p><span className="font-medium">Academic Strengths:</span> {formData.academicStrengths.join(', ')}</p>
+              )}
+              {formData.clubsExtracurriculars.length > 0 && (
+                <p><span className="font-medium">Clubs/Activities:</span> {formData.clubsExtracurriculars.join(', ')}</p>
+              )}
+              {formData.personalInterests.length > 0 && (
+                <p><span className="font-medium">Interests:</span> {formData.personalInterests.join(', ')}</p>
+              )}
+              {formData.strengthsTalents.length > 0 && (
+                <p><span className="font-medium">Strengths/Talents:</span> {formData.strengthsTalents.join(', ')}</p>
+              )}
+              {formData.dreamCareers.length > 0 && (
+                <p><span className="font-medium">Dream Careers:</span> {formData.dreamCareers.join(', ')}</p>
+              )}
+              {formData.motivationForCareer && (
+                <p><span className="font-medium">Career Motivation:</span> {formData.motivationForCareer}</p>
+              )}
+              {formData.shortTermGoal && (
+                <p><span className="font-medium">Short-term Goal:</span> {formData.shortTermGoal}</p>
+              )}
             </div>
           </div>
+        )}
 
-          {stage === 'School' && (
-            <div className="bg-white p-5 rounded-lg shadow-sm border border-gray-200">
-              <h4 className="font-semibold text-blue-900 mb-3 flex items-center">
-                <span className="mr-2">🎓</span>Education & Background
-              </h4>
-              <div className="space-y-2">
-                <p><span className="font-medium">Grade:</span> {formData.currentGrade}th Grade</p>
-                {formData.favoriteSubjects.length > 0 && (
-                  <p><span className="font-medium">Favorite Subjects:</span> {formData.favoriteSubjects.join(', ')}</p>
-                )}
-                {formData.streamsInterested.length > 0 && (
-                  <p><span className="font-medium">Streams:</span> {formData.streamsInterested.join(', ')}</p>
-                )}
-                {formData.academicStrengths.length > 0 && (
-                  <p><span className="font-medium">Strengths:</span> {formData.academicStrengths.join(', ')}</p>
-                )}
-                {formData.personalInterests.length > 0 && (
-                  <p><span className="font-medium">Interests:</span> {formData.personalInterests.join(', ')}</p>
-                )}
-                {formData.dreamCareers.length > 0 && (
-                  <p><span className="font-medium">Dream Careers:</span> {formData.dreamCareers.join(', ')}</p>
-                )}
-              </div>
+        {stage === 'College' && (
+          <div className="bg-white p-5 rounded-lg shadow-sm border border-gray-200">
+            <h4 className="font-semibold text-blue-900 mb-3 flex items-center">
+              <span className="mr-2">📚</span>Education & Career
+            </h4>
+            <div className="space-y-2">
+              {formData.degreeAndBranch && <p><span className="font-medium">Degree:</span> {formData.degreeAndBranch}</p>}
+              {formData.yearOfStudy && <p><span className="font-medium">Year:</span> {formData.yearOfStudy} Year</p>}
+              {formData.currentSkills.length > 0 && (
+                <p><span className="font-medium">Skills:</span> {formData.currentSkills.join(', ')}</p>
+              )}
+              {formData.certificationsOnlineCourses && (
+                <p><span className="font-medium">Certifications:</span> {formData.certificationsOnlineCourses}</p>
+              )}
+              {formData.internshipsProjects && (
+                <p><span className="font-medium">Internships/Projects:</span> {formData.internshipsProjects}</p>
+              )}
+              {formData.collegeInterests.length > 0 && (
+                <p><span className="font-medium">Interests:</span> {formData.collegeInterests.join(', ')}</p>
+              )}
+              {formData.softSkillsStrengths.length > 0 && (
+                <p><span className="font-medium">Soft Skills:</span> {formData.softSkillsStrengths.join(', ')}</p>
+              )}
+              {formData.preferredWorkStyle && (
+                <p><span className="font-medium">Work Style:</span> {formData.preferredWorkStyle}</p>
+              )}
+              {formData.careerGoalTargetRole && <p><span className="font-medium">Target Role:</span> {formData.careerGoalTargetRole}</p>}
+              {formData.desiredIndustry && <p><span className="font-medium">Desired Industry:</span> {formData.desiredIndustry}</p>}
+              {formData.preferredLearningMethod && (
+                <p><span className="font-medium">Learning Method:</span> {formData.preferredLearningMethod}</p>
+              )}
             </div>
-          )}
+          </div>
+        )}
 
-          {stage === 'College' && (
-            <div className="bg-white p-5 rounded-lg shadow-sm border border-gray-200">
-              <h4 className="font-semibold text-blue-900 mb-3 flex items-center">
-                <span className="mr-2">📚</span>Education & Career
-              </h4>
-              <div className="space-y-2">
-                <p><span className="font-medium">Degree:</span> {formData.degreeAndBranch}</p>
-                <p><span className="font-medium">Year:</span> {formData.yearOfStudy} Year</p>
-                {formData.currentSkills.length > 0 && (
-                  <p><span className="font-medium">Skills:</span> {formData.currentSkills.join(', ')}</p>
-                )}
-                {formData.collegeInterests.length > 0 && (
-                  <p><span className="font-medium">Interests:</span> {formData.collegeInterests.join(', ')}</p>
-                )}
-                <p><span className="font-medium">Target Role:</span> {formData.careerGoalTargetRole}</p>
-                <p><span className="font-medium">Desired Industry:</span> {formData.desiredIndustry}</p>
-              </div>
+        {stage === 'Professional' && (
+          <div className="bg-white p-5 rounded-lg shadow-sm border border-gray-200">
+            <h4 className="font-semibold text-blue-900 mb-3 flex items-center">
+              <span className="mr-2">💼</span>Professional Profile
+            </h4>
+            <div className="space-y-2">
+              {formData.currentJobRole && <p><span className="font-medium">Current Role:</span> {formData.currentJobRole}</p>}
+              {formData.industry && <p><span className="font-medium">Industry:</span> {formData.industry}</p>}
+              {formData.yearsExperience && <p><span className="font-medium">Experience:</span> {formData.yearsExperience}</p>}
+              {formData.coreSkills.length > 0 && (
+                <p><span className="font-medium">Core Skills:</span> {formData.coreSkills.join(', ')}</p>
+              )}
+              {formData.professionalCertifications && (
+                <p><span className="font-medium">Certifications:</span> {formData.professionalCertifications}</p>
+              )}
+              {formData.jobSatisfaction && (
+                <p><span className="font-medium">Job Satisfaction:</span> {formData.jobSatisfaction}</p>
+              )}
+              {formData.areasOfGrowth.length > 0 && (
+                <p><span className="font-medium">Growth Areas:</span> {formData.areasOfGrowth.join(', ')}</p>
+              )}
+              {formData.professionalStrengths.length > 0 && (
+                <p><span className="font-medium">Strengths:</span> {formData.professionalStrengths.join(', ')}</p>
+              )}
+              {formData.careerPreferences && (
+                <p><span className="font-medium">Work Preference:</span> {formData.careerPreferences}</p>
+              )}
+              {formData.careerGrowthPlan && <p><span className="font-medium">Growth Plan:</span> {formData.careerGrowthPlan}</p>}
+              {formData.targetRolesIndustry && <p><span className="font-medium">Target:</span> {formData.targetRolesIndustry}</p>}
+              {formData.skillsToLearn.length > 0 && (
+                <p><span className="font-medium">Skills to Learn:</span> {formData.skillsToLearn.join(', ')}</p>
+              )}
+              {formData.obstaclesFaced && (
+                <p><span className="font-medium">Obstacles:</span> {formData.obstaclesFaced}</p>
+              )}
             </div>
-          )}
-
-          {stage === 'Professional' && (
-            <div className="bg-white p-5 rounded-lg shadow-sm border border-gray-200">
-              <h4 className="font-semibold text-blue-900 mb-3 flex items-center">
-                <span className="mr-2">💼</span>Professional Profile
-              </h4>
-              <div className="space-y-2">
-                <p><span className="font-medium">Current Role:</span> {formData.currentJobRole}</p>
-                <p><span className="font-medium">Industry:</span> {formData.industry}</p>
-                <p><span className="font-medium">Experience:</span> {formData.yearsExperience}</p>
-                {formData.coreSkills.length > 0 && (
-                  <p><span className="font-medium">Core Skills:</span> {formData.coreSkills.join(', ')}</p>
-                )}
-                <p><span className="font-medium">Growth Plan:</span> {formData.careerGrowthPlan}</p>
-                <p><span className="font-medium">Target:</span> {formData.targetRolesIndustry}</p>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-      
-      <div className="flex gap-4">
-        <button
-          onClick={handleSubmit}
-          disabled={isSubmitting} // Disable while submitting
-          className={`flex-1 py-4 px-6 rounded-xl font-semibold transition-all duration-200 shadow-lg transform ${
-            isSubmitting 
-              ? 'bg-gray-400 cursor-not-allowed' 
-              : 'bg-gradient-to-r from-green-600 to-green-700 text-white hover:from-green-700 hover:to-green-800 hover:scale-105'
-          }`}
-        >
-          {isSubmitting ? (
-            <span className="flex items-center justify-center">
-              <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-              Saving Profile...
-            </span>
-          ) : (
-            '🚀 Submit Profile & Get Started'
-          )}
-        </button>
-        <button
-          onClick={() => setCurrentStep(currentStep - 1)}
-          disabled={isSubmitting}
-          className="px-6 py-4 border-2 border-gray-300 rounded-xl font-semibold text-gray-700 hover:border-gray-400 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-        >
-          ← Edit
-        </button>
+          </div>
+        )}
       </div>
     </div>
-  );
+    
+    <div className="flex gap-4">
+      <button
+        onClick={handleSubmit}
+        disabled={isSubmitting}
+        className={`flex-1 py-4 px-6 rounded-xl font-semibold transition-all duration-200 shadow-lg transform ${
+          isSubmitting 
+            ? 'bg-gray-400 cursor-not-allowed' 
+            : 'bg-gradient-to-r from-green-600 to-green-700 text-white hover:from-green-700 hover:to-green-800 hover:scale-105'
+        }`}
+      >
+        {isSubmitting ? (
+          <span className="flex items-center justify-center">
+            <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            Saving Profile...
+          </span>
+        ) : (
+          '🚀 Submit Profile & Get Started'
+        )}
+      </button>
+      <button
+        onClick={() => setCurrentStep(currentStep - 1)}
+        disabled={isSubmitting}
+        className="px-6 py-4 border-2 border-gray-300 rounded-xl font-semibold text-gray-700 hover:border-gray-400 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+      >
+        ← Edit
+      </button>
+    </div>
+  </div>
+);
 
   const renderCurrentStep = () => {
     switch (currentStep) {
