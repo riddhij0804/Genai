@@ -56,7 +56,7 @@ app.post("/recommend", async (req, res) => {
     2. A catchy 2-3 sentence description that highlights the exciting aspects, impact, and opportunities
     
     Format each career as:
-    **Career Title**: Description here
+    *Career Title*: Description here
     
     Make the descriptions engaging and inspiring to motivate users to explore these careers further.`;
 
@@ -80,10 +80,10 @@ app.post("/recommend", async (req, res) => {
     const responseText = response.data.candidates[0].content.parts[0].text;
     const careers = responseText
       .split('\n')
-      .filter(line => line.includes('**') && line.includes(':'))
+      .filter(line => line.includes('') && line.includes(':'))
       .map(line => {
-        // Extract title and description from format: **Title**: Description
-        const match = line.match(/\*\*(.*?)\*\*:\s*(.*)/);
+        // Extract title and description from format: *Title*: Description
+        const match = line.match(/\\(.?)\\:\s(.*)/);
         if (match) {
           return {
             title: match[1].trim(),
@@ -187,15 +187,15 @@ app.post("/analyze-profile", async (req, res) => {
     5. Reference their exact goals and motivations
 
     For each of the 5 career recommendations, provide:
-    - **title**: Clear career name
-    - **matchPercentage**: 75-95% based on how well it matches their ACTUAL profile
-    - **description**: Write a brief but exciting 2-3 sentence description that:
+    - *title*: Clear career name
+    - *matchPercentage*: 75-95% based on how well it matches their ACTUAL profile
+    - *description*: Write a brief but exciting 2-3 sentence description that:
       * Starts with a catchy hook about what makes this career amazing
       * Explains HOW their specific interests/subjects connect to this career
       * Ends with an exciting outcome or impact they can achieve
       * Use energetic language that creates enthusiasm and curiosity
-    - **relevantSkillsFromProfile**: List 3-4 items from THEIR ACTUAL profile (subjects, extracurriculars, strengths, interests) that connect to this career
-    - **growthPotential**: Start with exactly one of these words: "High Growth", "Moderate Growth", or "Low Growth" followed by specific explanation of career progression opportunities, specialization areas, and advancement paths (NO salary mentions)
+    - *relevantSkillsFromProfile*: List 3-4 items from THEIR ACTUAL profile (subjects, extracurriculars, strengths, interests) that connect to this career
+    - *growthPotential*: Start with exactly one of these words: "High Growth", "Moderate Growth", or "Low Growth" followed by specific explanation of career progression opportunities, specialization areas, and advancement paths (NO salary mentions)
       * High Growth: Fast advancement, many opportunities, high demand
       * Moderate Growth: Steady progression, some advancement opportunities  
       * Low Growth: Stable but slower advancement, fewer rapid changes
@@ -232,8 +232,8 @@ app.post("/analyze-profile", async (req, res) => {
     
     // Clean and parse JSON response
     let cleanedResponse = responseText.trim();
-    if (cleanedResponse.startsWith('```json')) {
-      cleanedResponse = cleanedResponse.replace(/```json\n?/, '').replace(/\n?```$/, '');
+    if (cleanedResponse.startsWith('json')) {
+      cleanedResponse = cleanedResponse.replace(/json\n?/, '').replace(/\n?```$/, '');
     }
     
     try {
@@ -277,6 +277,36 @@ app.post('/action-plan', async (req, res) => {
     console.log(`Generating action plan for careers: ${careers.join(", ")}`);
     const actionPlan = await generateActionPlan(careers, skills || []);
     
+    // Add detailed logging of response structure
+    console.log('Action Plan Response Structure:', JSON.stringify({
+      keys: Object.keys(actionPlan || {}),
+      hasRoadmap: Boolean(actionPlan?.roadmap_json),
+      hasReverseMapping: Boolean(actionPlan?.reverse_job_mapping),
+      hasSituationSpecific: Boolean(actionPlan?.situation_specific),
+      hasAdditionalSkills: Boolean(actionPlan?.additional_skills_needed),
+      isError: Boolean(actionPlan?.error),
+      isFallback: Boolean(actionPlan?.note?.includes("simplified action plan"))
+    }, null, 2));
+    
+    // Add more detailed debugging of actual content
+    console.log('Reverse Job Mapping Structure:', JSON.stringify({
+      hasSkills: Boolean(actionPlan?.reverse_job_mapping?.skills),
+      skillsCount: Array.isArray(actionPlan?.reverse_job_mapping?.skills) ? actionPlan.reverse_job_mapping.skills.length : 0,
+      hasCourses: Boolean(actionPlan?.reverse_job_mapping?.courses),
+      coursesCount: Array.isArray(actionPlan?.reverse_job_mapping?.courses) ? actionPlan.reverse_job_mapping.courses.length : 0,
+      hasTools: Boolean(actionPlan?.reverse_job_mapping?.tools),
+      toolsCount: Array.isArray(actionPlan?.reverse_job_mapping?.tools) ? actionPlan.reverse_job_mapping.tools.length : 0
+    }, null, 2));
+    
+    console.log('Situation Specific Structure:', JSON.stringify({
+      hasFreelancing: Boolean(actionPlan?.situation_specific?.freelancing),
+      hasTopRecruiters: Boolean(actionPlan?.situation_specific?.top_recruiters),
+      recruitersCount: Array.isArray(actionPlan?.situation_specific?.top_recruiters) ? actionPlan.situation_specific.top_recruiters.length : 0,
+      hasGovInitiatives: Boolean(actionPlan?.situation_specific?.government_initiatives),
+      hasEmergingTrends: Boolean(actionPlan?.situation_specific?.emerging_trends),
+      trendsCount: Array.isArray(actionPlan?.situation_specific?.emerging_trends) ? actionPlan.situation_specific.emerging_trends.length : 0
+    }, null, 2));
+    
     if (actionPlan.error) {
       console.error('Action Plan Error:', actionPlan.error);
       
@@ -298,7 +328,24 @@ app.post('/action-plan', async (req, res) => {
         limitExceeded: true
       });
     } else {
-      res.json(actionPlan);
+      // Ensure all expected sections are present, even if empty
+      const safeActionPlan = {
+        roadmap_json: actionPlan.roadmap_json || [],
+        reverse_job_mapping: actionPlan.reverse_job_mapping || {
+          skills: [],
+          courses: [],
+          tools: []
+        },
+        situation_specific: actionPlan.situation_specific || {
+          freelancing: "Information not available",
+          top_recruiters: [],
+          government_initiatives: [],
+          emerging_trends: []
+        },
+        additional_skills_needed: actionPlan.additional_skills_needed || []
+      };
+      
+      res.json(safeActionPlan);
     }
   } catch (error) {
     console.error('Action Plan Generation Error:', error);
