@@ -114,11 +114,15 @@ const ActionPlanVisualizer = ({ careers, skills }) => {
   
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-96">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500 border-opacity-50 mx-auto"></div>
-          <p className="mt-4 text-lg text-gray-700">Generating comprehensive action plan...</p>
-          <p className="text-sm text-gray-500">This may take a minute or two</p>
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 py-12 px-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex items-center justify-center h-96">
+            <div className="text-center bg-white p-8 rounded-2xl shadow-lg">
+              <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto mb-4"></div>
+              <p className="text-lg text-gray-600">🤖 Generating comprehensive action plan...</p>
+              <p className="text-sm text-gray-500 mt-2">This may take a minute or two</p>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -128,42 +132,50 @@ const ActionPlanVisualizer = ({ careers, skills }) => {
     const isQuotaError = error.includes("API rate limit") || error.includes("quota");
     
     return (
-      <div className={`p-6 rounded-lg border ${isQuotaError ? 'bg-amber-50 border-amber-200' : 'bg-red-50 border-red-200'}`}>
-        <h3 className={`text-lg font-semibold ${isQuotaError ? 'text-amber-700' : 'text-red-700'}`}>
-          {isQuotaError ? 'API Quota Limit Reached' : 'Error'}
-        </h3>
-        
-        {isQuotaError ? (
-          <div>
-            <p className="text-amber-600 mb-2">
-              The AI service has reached its request limit. We'll provide a simplified career plan instead.
-            </p>
-            <p className="text-sm text-gray-600">
-              The Gemini API has usage limits that have been exceeded. The system will provide basic guidance, 
-              but for detailed AI-generated career plans, please try again later.
-            </p>
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 py-12 px-4">
+        <div className="max-w-7xl mx-auto">
+          <div className={`bg-white p-8 rounded-2xl shadow-lg border ${isQuotaError ? 'border-amber-200' : 'border-red-200'}`}>
+            <h3 className={`text-lg font-semibold ${isQuotaError ? 'text-amber-700' : 'text-red-700'}`}>
+              {isQuotaError ? '⚠️ API Quota Limit Reached' : '❌ Error'}
+            </h3>
+            
+            {isQuotaError ? (
+              <div>
+                <p className="text-amber-600 mb-2">
+                  The AI service has reached its request limit. We'll provide a simplified career plan instead.
+                </p>
+                <p className="text-sm text-gray-600">
+                  The Gemini API has usage limits that have been exceeded. The system will provide basic guidance, 
+                  but for detailed AI-generated career plans, please try again later.
+                </p>
+              </div>
+            ) : (
+              <p className="text-red-600">{error}</p>
+            )}
+            
+            <button 
+              onClick={fetchActionPlan} 
+              className={`mt-4 px-6 py-3 text-white rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 ${
+                isQuotaError ? 'bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700' : 'bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700'
+              }`}
+            >
+              {isQuotaError ? 'Continue with Simplified Plan' : 'Try Again'}
+            </button>
           </div>
-        ) : (
-          <p className="text-red-600">{error}</p>
-        )}
-        
-        <button 
-          onClick={fetchActionPlan} 
-          className={`mt-4 px-4 py-2 text-white rounded-md ${
-            isQuotaError ? 'bg-amber-600 hover:bg-amber-700' : 'bg-red-600 hover:bg-red-700'
-          }`}
-        >
-          {isQuotaError ? 'Continue with Simplified Plan' : 'Try Again'}
-        </button>
+        </div>
       </div>
     );
   }
   
   if (!actionPlan) {
     return (
-      <div className="bg-blue-50 p-6 rounded-lg border border-blue-200">
-        <h3 className="text-blue-700 text-lg font-semibold">No Action Plan Yet</h3>
-        <p className="text-blue-600">Select a career to generate an action plan</p>
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 py-12 px-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="bg-white p-8 rounded-2xl shadow-lg border border-blue-200 text-center">
+            <h3 className="text-blue-700 text-xl font-bold mb-4">🎯 No Action Plan Yet</h3>
+            <p className="text-blue-600">Select a career to generate a personalized action plan</p>
+          </div>
+        </div>
       </div>
     );
   }
@@ -172,38 +184,50 @@ const ActionPlanVisualizer = ({ careers, skills }) => {
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d'];
   
   return (
-    <div className="bg-white rounded-xl p-6">
-      {/* Title is now handled by parent component */}
-      
-      {/* Tab Navigation */}
-      <div className="flex border-b border-gray-200 mb-6">
-        <button 
-          onClick={() => setActiveTab('roadmap')}
-          className={`py-2 px-4 text-sm font-medium ${activeTab === 'roadmap' ? 'text-blue-600 border-b-2 border-blue-500' : 'text-gray-500 hover:text-gray-700'}`}
-        >
-          Career Roadmap
-        </button>
-        <button 
-          onClick={() => setActiveTab('skills')}
-          className={`py-2 px-4 text-sm font-medium ${activeTab === 'skills' ? 'text-blue-600 border-b-2 border-blue-500' : 'text-gray-500 hover:text-gray-700'}`}
-        >
-          Skills & Learning
-        </button>
-        <button 
-          onClick={() => setActiveTab('situation')}
-          className={`py-2 px-4 text-sm font-medium ${activeTab === 'situation' ? 'text-blue-600 border-b-2 border-blue-500' : 'text-gray-500 hover:text-gray-700'}`}
-        >
-          Career Situation
-        </button>
-      </div>
-      
-      {/* Tab Content */}
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 py-12 px-4">
+      <div className="max-w-7xl mx-auto">
+        <div className="bg-white rounded-2xl shadow-lg p-8">
+          {/* Title is now handled by parent component */}
+          
+          {/* Tab Navigation */}
+          <div className="flex border-b border-gray-200 mb-8">
+            <button 
+              onClick={() => setActiveTab('roadmap')}
+              className={`py-3 px-6 text-sm font-semibold rounded-t-lg transition-all duration-300 ${
+                activeTab === 'roadmap' 
+                  ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg transform -translate-y-1' 
+                  : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+              }`}
+            >
+              🗺️ Career Roadmap
+            </button>
+            <button 
+              onClick={() => setActiveTab('skills')}
+              className={`py-3 px-6 text-sm font-semibold rounded-t-lg transition-all duration-300 ${
+                activeTab === 'skills' 
+                  ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg transform -translate-y-1' 
+                  : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+              }`}
+            >
+              🎯 Skills & Learning
+            </button>
+            <button 
+              onClick={() => setActiveTab('situation')}
+              className={`py-3 px-6 text-sm font-semibold rounded-t-lg transition-all duration-300 ${
+                activeTab === 'situation' 
+                  ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg transform -translate-y-1' 
+                  : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+              }`}
+            >
+              📊 Career Situation
+            </button>
+          </div>      {/* Tab Content */}
       <div className="mt-6">
         {/* Roadmap Visualization */}
         {activeTab === 'roadmap' && (
           <>
-            <h3 className="text-lg font-semibold mb-4">Career Development Roadmap</h3>
-            <div style={{ height: 600 }} className="border border-gray-200 rounded-lg">
+            <h3 className="text-2xl font-bold text-gray-800 mb-6 text-center">🗺️ Career Development Roadmap</h3>
+            <div style={{ height: 600 }} className="border-2 border-gray-200 rounded-2xl shadow-lg bg-gradient-to-br from-gray-50 to-white">
               <ReactFlow
                 nodes={nodes}
                 edges={edges}
@@ -215,21 +239,22 @@ const ActionPlanVisualizer = ({ careers, skills }) => {
             </div>
             
             {/* Detailed Roadmap Steps */}
-            <div className="mt-8">
-              <h4 className="text-md font-semibold mb-3">Detailed Steps</h4>
-              <div className="space-y-4">
+            <div className="mt-12">
+              <h4 className="text-xl font-bold mb-6 text-gray-800 text-center">📋 Detailed Action Steps</h4>
+              <div className="grid gap-6">
                 {actionPlan.roadmap_json?.map(step => (
-                  <div key={step.id} className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50">
+                  <div key={step.id} className="bg-white p-6 border border-gray-200 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
                     <div className="flex items-start">
-                      <div className="bg-blue-600 text-white rounded-full h-6 w-6 flex items-center justify-center mr-3">
+                      <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-full h-10 w-10 flex items-center justify-center mr-4 font-bold shadow-lg">
                         {step.id}
                       </div>
-                      <div>
-                        <h5 className="font-semibold text-blue-700">{step.title}</h5>
-                        <p className="text-gray-700 mt-1">{step.description}</p>
+                      <div className="flex-1">
+                        <h5 className="font-bold text-lg text-gray-800 mb-2">{step.title}</h5>
+                        <p className="text-gray-700 leading-relaxed">{step.description}</p>
                         {step.dependencies?.length > 0 && (
-                          <div className="mt-2 text-sm text-gray-500">
-                            <span className="font-medium">Prerequisites:</span> Steps {step.dependencies.join(', ')}
+                          <div className="mt-4 p-3 bg-blue-50 rounded-lg">
+                            <span className="font-semibold text-blue-700">📋 Prerequisites:</span> 
+                            <span className="text-blue-600 ml-2">Steps {step.dependencies.join(', ')}</span>
                           </div>
                         )}
                       </div>
@@ -246,64 +271,77 @@ const ActionPlanVisualizer = ({ careers, skills }) => {
         {/* Skills and Learning */}
         {activeTab === 'skills' && (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <h3 className="text-2xl font-bold text-gray-800 mb-6 text-center">🎯 Skills & Learning Path</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
               {/* Required Skills */}
-              <div className="border border-gray-200 rounded-lg p-6">
-                <h3 className="text-lg font-semibold mb-4">Required Skills</h3>
+              <div className="bg-white border-2 border-gray-200 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300">
+                <h3 className="text-xl font-bold mb-6 text-gray-800 flex items-center">
+                  <span className="mr-3">✅</span>
+                  Required Skills
+                </h3>
                 
                 {actionPlan.reverse_job_mapping?.skills?.map((skill, index) => (
-                  <div key={index} className="mb-2 flex items-center">
-                    <div className="w-3 h-3 rounded-full bg-blue-500 mr-2"></div>
-                    <span>{skill}</span>
+                  <div key={index} className="mb-3 flex items-center bg-blue-50 p-3 rounded-lg">
+                    <div className="w-4 h-4 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 mr-3"></div>
+                    <span className="font-medium text-gray-700">{skill}</span>
                   </div>
                 ))}
               </div>
               
               {/* Additional Skills Needed */}
-              <div className="border border-gray-200 rounded-lg p-6 bg-amber-50">
-                <h3 className="text-lg font-semibold mb-4">Skills to Acquire</h3>
+              <div className="bg-gradient-to-br from-amber-50 to-orange-50 border-2 border-amber-200 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300">
+                <h3 className="text-xl font-bold mb-6 text-gray-800 flex items-center">
+                  <span className="mr-3">🚀</span>
+                  Skills to Acquire
+                </h3>
                 
                 {actionPlan.additional_skills_needed?.map((skill, index) => (
-                  <div key={index} className="mb-2 flex items-center">
-                    <div className="w-3 h-3 rounded-full bg-amber-500 mr-2"></div>
-                    <span>{skill}</span>
+                  <div key={index} className="mb-3 flex items-center bg-white p-3 rounded-lg shadow-sm">
+                    <div className="w-4 h-4 rounded-full bg-gradient-to-r from-amber-500 to-orange-600 mr-3"></div>
+                    <span className="font-medium text-gray-700">{skill}</span>
                   </div>
                 ))}
               </div>
             </div>
             
             {/* Courses and Certifications */}
-            <div className="mt-8">
-              <h3 className="text-lg font-semibold mb-4">Recommended Courses & Certifications</h3>
-              <div className="overflow-x-auto">
-                <table className="min-w-full bg-white border border-gray-200">
-                  <thead>
-                    <tr className="bg-gray-100">
-                      <th className="py-2 px-4 border-b text-left">Course/Certification</th>
-                      <th className="py-2 px-4 border-b text-left">Provider</th>
-                      <th className="py-2 px-4 border-b text-left">Level</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {actionPlan.reverse_job_mapping?.courses?.map((course, index) => (
-                      <tr key={index} className="hover:bg-gray-50">
-                        <td className="py-2 px-4 border-b">{course.name}</td>
-                        <td className="py-2 px-4 border-b">{course.provider || 'Various'}</td>
-                        <td className="py-2 px-4 border-b">{course.level || 'All levels'}</td>
+            <div className="mb-12">
+              <h3 className="text-xl font-bold mb-6 text-gray-800 text-center">📚 Recommended Courses & Certifications</h3>
+              <div className="bg-white rounded-2xl shadow-lg overflow-hidden border-2 border-gray-200">
+                <div className="overflow-x-auto">
+                  <table className="min-w-full">
+                    <thead>
+                      <tr className="bg-gradient-to-r from-blue-500 to-purple-600 text-white">
+                        <th className="py-4 px-6 text-left font-bold">📖 Course/Certification</th>
+                        <th className="py-4 px-6 text-left font-bold">🏢 Provider</th>
+                        <th className="py-4 px-6 text-left font-bold">📊 Level</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {actionPlan.reverse_job_mapping?.courses?.map((course, index) => (
+                        <tr key={index} className="hover:bg-gray-50 transition-colors duration-200 border-b border-gray-100">
+                          <td className="py-4 px-6 font-medium text-gray-800">{course.name}</td>
+                          <td className="py-4 px-6 text-gray-600">{course.provider || 'Various'}</td>
+                          <td className="py-4 px-6">
+                            <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
+                              {course.level || 'All levels'}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
             
             {/* Tools and Software */}
-            <div className="mt-8">
-              <h3 className="text-lg font-semibold mb-4">Tools & Software</h3>
+            <div>
+              <h3 className="text-xl font-bold mb-6 text-gray-800 text-center">🛠️ Tools & Software</h3>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {actionPlan.reverse_job_mapping?.tools?.map((tool, index) => (
-                  <div key={index} className="bg-gray-50 p-3 rounded-md text-center">
-                    {tool}
+                  <div key={index} className="bg-white p-4 rounded-xl text-center shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-gray-200">
+                    <span className="font-semibold text-gray-700">{tool}</span>
                   </div>
                 ))}
               </div>
@@ -314,34 +352,37 @@ const ActionPlanVisualizer = ({ careers, skills }) => {
         {/* Situation Specific */}
         {activeTab === 'situation' && actionPlan.situation_specific && (
           <>
-            <h3 className="text-lg font-semibold mb-4">Career Situation Analysis</h3>
-            
+            <h3 className="text-2xl font-bold text-gray-800 mb-6 text-center">📊 Career Situation Analysis</h3>
             {/* Freelancing */}
-            <div className="mb-6 bg-gradient-to-r from-blue-50 to-indigo-50 p-5 rounded-lg">
-              <h4 className="text-md font-semibold mb-2">Freelancing Opportunities</h4>
-              <p className="text-gray-700">{actionPlan.situation_specific.freelancing}</p>
+            <div className="mb-8 bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 p-8 rounded-2xl shadow-lg border border-blue-200">
+              <h4 className="text-xl font-bold mb-4 text-gray-800 flex items-center">
+                <span className="mr-3">💼</span>
+                Freelancing Opportunities
+              </h4>
+              <p className="text-gray-700 leading-relaxed text-lg">{actionPlan.situation_specific.freelancing}</p>
               
               {Array.isArray(actionPlan.situation_specific.freelancing_platforms) && (
-                <div className="mt-3">
-                  <h5 className="text-sm font-medium text-gray-700">Popular Platforms:</h5>
-                  <div className="flex flex-wrap gap-2 mt-1">
+                <div className="mt-6">
+                  <h5 className="text-lg font-semibold text-gray-800 mb-3">🌐 Popular Platforms:</h5>
+                  <div className="flex flex-wrap gap-3">
                     {actionPlan.situation_specific.freelancing_platforms.map((platform, index) => (
-                      <span key={index} className="inline-block bg-white px-3 py-1 rounded-full text-sm">
+                      <span key={index} className="inline-block bg-white px-4 py-2 rounded-xl text-sm font-semibold shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105">
                         {platform}
                       </span>
                     ))}
                   </div>
                 </div>
               )}
-            </div>
-            
-            {/* Top Recruiters */}
-            <div className="mb-6">
-              <h4 className="text-md font-semibold mb-2">Top Recruiters</h4>
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+            </div>            {/* Top Recruiters */}
+            <div className="mb-8">
+              <h4 className="text-xl font-bold mb-6 text-gray-800 flex items-center">
+                <span className="mr-3">🏢</span>
+                Top Recruiters
+              </h4>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {actionPlan.situation_specific.top_recruiters?.map((recruiter, index) => (
-                  <div key={index} className="border border-gray-200 p-3 rounded-md text-center hover:bg-gray-50">
-                    {recruiter}
+                  <div key={index} className="bg-white border-2 border-gray-200 p-4 rounded-xl text-center hover:bg-gray-50 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
+                    <span className="font-semibold text-gray-700">{recruiter}</span>
                   </div>
                 ))}
               </div>
@@ -349,33 +390,53 @@ const ActionPlanVisualizer = ({ careers, skills }) => {
             
             {/* Government Initiatives */}
             {actionPlan.situation_specific.government_initiatives && (
-              <div className="mb-6 bg-gray-50 p-4 rounded-lg">
-                <h4 className="text-md font-semibold mb-2">Government Initiatives</h4>
-                <ul className="list-disc pl-5">
+              <div className="mb-8 bg-green-50 p-8 rounded-2xl shadow-lg border border-green-200">
+                <h4 className="text-xl font-bold mb-4 text-gray-800 flex items-center">
+                  <span className="mr-3">🏛️</span>
+                  Government Initiatives
+                </h4>
+                <ul className="list-none space-y-3">
                   {Array.isArray(actionPlan.situation_specific.government_initiatives) 
                     ? actionPlan.situation_specific.government_initiatives.map((initiative, index) => (
-                        <li key={index} className="text-gray-700 mb-1">{initiative}</li>
+                        <li key={index} className="bg-white p-4 rounded-lg shadow-sm flex items-start">
+                          <span className="text-green-600 mr-3 mt-1">✅</span>
+                          <span className="text-gray-700 font-medium">{initiative}</span>
+                        </li>
                       ))
-                    : <li className="text-gray-700">{actionPlan.situation_specific.government_initiatives}</li>
+                    : <li className="bg-white p-4 rounded-lg shadow-sm flex items-start">
+                        <span className="text-green-600 mr-3 mt-1">✅</span>
+                        <span className="text-gray-700 font-medium">{actionPlan.situation_specific.government_initiatives}</span>
+                      </li>
                   }
                 </ul>
               </div>
             )}
             
             {/* Emerging Trends */}
-            <div className="bg-amber-50 p-4 rounded-lg">
-              <h4 className="text-md font-semibold mb-2">Emerging Trends in {careers[0]}</h4>
-              <ul className="list-disc pl-5">
+            <div className="bg-gradient-to-br from-amber-50 to-orange-50 p-8 rounded-2xl shadow-lg border border-amber-200">
+              <h4 className="text-xl font-bold mb-4 text-gray-800 flex items-center">
+                <span className="mr-3">🚀</span>
+                Emerging Trends in {careers[0]}
+              </h4>
+              <ul className="list-none space-y-3">
                 {Array.isArray(actionPlan.situation_specific.emerging_trends) 
                   ? actionPlan.situation_specific.emerging_trends.map((trend, index) => (
-                      <li key={index} className="text-gray-700 mb-1">{trend}</li>
+                      <li key={index} className="bg-white p-4 rounded-lg shadow-sm flex items-start">
+                        <span className="text-amber-600 mr-3 mt-1">⭐</span>
+                        <span className="text-gray-700 font-medium">{trend}</span>
+                      </li>
                     ))
-                  : <li className="text-gray-700">{actionPlan.situation_specific.emerging_trends}</li>
+                  : <li className="bg-white p-4 rounded-lg shadow-sm flex items-start">
+                      <span className="text-amber-600 mr-3 mt-1">⭐</span>
+                      <span className="text-gray-700 font-medium">{actionPlan.situation_specific.emerging_trends}</span>
+                    </li>
                 }
               </ul>
             </div>
           </>
         )}
+      </div>
+        </div>
       </div>
     </div>
   );

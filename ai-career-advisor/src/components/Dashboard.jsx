@@ -56,152 +56,164 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      {/* Top Navigation Bar */}
-      <nav className="bg-white dark:bg-gray-800 shadow-md px-6 py-4 flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">AI Career Advisor Dashboard</h1>
-        <div className="flex gap-4 items-center">
-            <span className="text-gray-700 dark:text-gray-300">{userProfile?.fullName || user?.email}</span>
-          <button
-            onClick={goHome}
-            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-          >
-            Home
-          </button>
-          
-          <button
-            onClick={handleLogout}
-            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-          >
-            Logout
-          </button>
-        </div>
-      </nav>
-
-      {!profileCompleted && (
-        <div className="bg-blue-50 dark:bg-blue-900 border border-blue-200 dark:border-blue-700 p-4 m-6 rounded-lg">
-          <div className="flex items-center justify-between">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+      {/* Header */}
+      <div className="bg-white shadow-lg border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 py-6">
+          <div className="flex justify-between items-center">
             <div>
-              <h3 className="text-lg font-semibold text-blue-900 dark:text-blue-100 mb-2">
-                Complete Your Profile
-              </h3>
-              <p className="text-blue-700 dark:text-blue-200">
-                Help us provide better career guidance by completing your profile.
-              </p>
             </div>
-            <div className="flex gap-2">
+            <div className="flex gap-4 items-center">
+              <span className="text-gray-700 font-medium">{userProfile?.fullName || user?.email}</span>
               <button
-                onClick={refreshProfileStatus}
-                className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg font-medium text-sm"
+                onClick={goHome}
+                className="px-6 py-2 bg-gradient-to-r from-green-500 to-blue-600 text-white rounded-lg font-semibold hover:from-green-600 hover:to-blue-700 transition-all duration-300 transform hover:scale-105"
               >
-                🔄 Refresh
+                Home
               </button>
               <button
-                onClick={() => setShowProfileModal(true)}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium"
+                onClick={handleLogout}
+                className="px-6 py-2 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg font-semibold hover:from-red-600 hover:to-red-700 transition-all duration-300 transform hover:scale-105"
               >
-                Complete Profile
+                Logout
               </button>
             </div>
           </div>
         </div>
-      )}
+      </div>
 
-      {/* Main Content Area */}
-      <main className="p-6">
-        <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
-          <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">
-              Welcome, {userProfile?.fullName || user?.email}!
+      <div className="max-w-7xl mx-auto px-4 py-12">
+        {!profileCompleted && (
+          <div className="bg-gradient-to-r from-blue-100 to-purple-100 border-2 border-blue-200 p-8 mb-8 rounded-2xl shadow-lg">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-2xl font-bold text-blue-900 mb-2 flex items-center">
+                  <span className="mr-3">📋</span>
+                  Complete Your Profile
+                </h3>
+                <p className="text-blue-700 text-lg">
+                  Help us provide better career guidance by completing your profile.
+                </p>
+              </div>
+              <div className="flex gap-3">
+                <button
+                  onClick={refreshProfileStatus}
+                  className="px-6 py-3 bg-gray-600 hover:bg-gray-700 text-white rounded-lg font-semibold transition-all duration-300 transform hover:scale-105"
+                >
+                  🔄 Refresh
+                </button>
+                <button
+                  onClick={() => setShowProfileModal(true)}
+                  className="px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white rounded-lg font-semibold transition-all duration-300 transform hover:scale-105"
+                >
+                  ✨ Complete Profile
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+        {/* Welcome Section */}
+        <div className="bg-white rounded-2xl shadow-lg p-8 mb-12">
+          <h2 className="text-3xl font-bold text-gray-800 mb-4 flex items-center">
+            <span className="mr-3">🌟</span>
+            Welcome, {userProfile?.fullName || user?.email}!
           </h2>
-          <p className="text-gray-700 dark:text-gray-300">
-            This is your Dashboard. From here, you can access your personalized career insights,
-            skill recommendations, and progress tracking.
+          <p className="text-gray-700 text-lg leading-relaxed">
+            This is your personalized dashboard where you can access career insights, 
+            skill recommendations, and track your professional growth journey.
           </p>
+        </div>
 
-          {/* Placeholder for future dashboard widgets */}
-          <div className="mt-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {/* NEW: Career Recommendations Card */}
-            <div className="bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-800 dark:to-pink-800 p-4 rounded-lg shadow text-center">
-              <h3 className="font-bold text-gray-800 dark:text-white flex items-center justify-center">
-                <span className="mr-2">🎯</span>
-                AI Career Recommendations
-              </h3>
-              <p className="text-gray-700 dark:text-gray-300 mt-2">Get personalized career suggestions based on your profile.</p>
-
+        {/* Dashboard Cards */}
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 mb-12">
+          {/* Career Recommendations Card */}
+          <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group hover:scale-105">
+            <div className="bg-gradient-to-r from-purple-500 to-pink-600 p-6 text-white relative">
+              <div className="absolute top-4 right-4">
+                <span className="text-4xl">🎯</span>
+              </div>
+              <h3 className="text-2xl font-bold mb-2 pr-16">AI Career Recommendations</h3>
+              <p className="text-purple-100">Get personalized career suggestions based on your profile</p>
+            </div>
+            <div className="p-6">
               <button 
                 onClick={goToCareerRecommendations}
-                className={`mt-3 px-4 py-2 rounded font-medium ${
+                className={`w-full py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 ${
                   profileCompleted 
-                    ? 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white' 
+                    ? 'bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white' 
                     : 'bg-gray-400 text-gray-600 cursor-not-allowed'
                 }`}
                 disabled={!profileCompleted}
               >
-                {profileCompleted ? '✨ Get Recommendations' : 'Complete Profile First'}
-              </button>
-            </div>
-
-            <div className="bg-blue-100 dark:bg-blue-800 p-4 rounded-lg shadow text-center">
-              <h3 className="font-bold text-gray-800 dark:text-white">Career Roadmap</h3>
-              <p className="text-gray-700 dark:text-gray-300 mt-2">View and track your career plan.</p>
-
-              <button 
-                className={`mt-3 px-4 py-2 rounded font-medium ${
-                  profileCompleted 
-                    ? 'bg-blue-600 hover:bg-blue-700 text-white' 
-                    : 'bg-gray-400 text-gray-600 cursor-not-allowed'
-                }`}
-                disabled={!profileCompleted}
-              >
-                {profileCompleted ? 'View Roadmap' : 'Complete Profile First'}
-              </button>
-            </div>
-            <div className="bg-green-100 dark:bg-green-800 p-4 rounded-lg shadow text-center">
-              <h3 className="font-bold text-gray-800 dark:text-white">Skill Insights</h3>
-              <p className="text-gray-700 dark:text-gray-300 mt-2">Analyze your skills vs market demand.</p>
-    
-              <button 
-                className={`mt-3 px-4 py-2 rounded font-medium ${
-                  profileCompleted 
-                    ? 'bg-green-600 hover:bg-green-700 text-white' 
-                    : 'bg-gray-400 text-gray-600 cursor-not-allowed'
-                }`}
-                disabled={!profileCompleted}
-              >
-                {profileCompleted ? 'View Insights' : 'Complete Profile First'}
-              </button>
-            </div>
-            <div className="bg-yellow-100 dark:bg-yellow-800 p-4 rounded-lg shadow text-center">
-              <h3 className="font-bold text-gray-800 dark:text-white">Achievements</h3>
-              <p className="text-gray-700 dark:text-gray-300 mt-2">Track milestones and badges.</p>
- 
-              <button 
-                className={`mt-3 px-4 py-2 rounded font-medium ${
-                  profileCompleted 
-                    ? 'bg-yellow-600 hover:bg-yellow-700 text-white' 
-                    : 'bg-gray-400 text-gray-600 cursor-not-allowed'
-                }`}
-                disabled={!profileCompleted}
-              >
-                {profileCompleted ? 'View Achievements' : 'Complete Profile First'}
+                {profileCompleted ? '✨ Get Recommendations' : '📋 Complete Profile First'}
               </button>
             </div>
           </div>
 
-          <div className="mt-6">
-            <div className="bg-purple-100 dark:bg-purple-800 p-4 rounded-lg shadow text-center">
-              <h3 className="font-bold text-gray-800 dark:text-white">Profile Settings</h3>
-              <p className="text-gray-700 dark:text-gray-300 mt-2">Update your profile information and preferences.</p>
-              <button
-                onClick={() => setShowProfileModal(true)}
-                className="mt-3 bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded font-medium"
+          {/* Career Roadmap Card */}
+          <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group hover:scale-105">
+            <div className="bg-gradient-to-r from-blue-500 to-cyan-600 p-6 text-white relative">
+              <div className="absolute top-4 right-4">
+                <span className="text-4xl">🗺️</span>
+              </div>
+              <h3 className="text-2xl font-bold mb-2 pr-16">Career Roadmap</h3>
+              <p className="text-blue-100">View and track your personalized career development plan</p>
+            </div>
+            <div className="p-6">
+              <button 
+                className={`w-full py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 ${
+                  profileCompleted 
+                    ? 'bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700 text-white' 
+                    : 'bg-gray-400 text-gray-600 cursor-not-allowed'
+                }`}
+                disabled={!profileCompleted}
               >
-                {profileCompleted ? 'Edit Profile' : 'Complete Profile'}
+                {profileCompleted ? '🗺️ View Roadmap' : '📋 Complete Profile First'}
+              </button>
+            </div>
+          </div>
+
+          {/* Skill Insights Card */}
+          <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group hover:scale-105">
+            <div className="bg-gradient-to-r from-green-500 to-emerald-600 p-6 text-white relative">
+              <div className="absolute top-4 right-4">
+                <span className="text-4xl">📊</span>
+              </div>
+              <h3 className="text-2xl font-bold mb-2 pr-16">Skill Insights</h3>
+              <p className="text-green-100">Analyze your skills versus current market demand</p>
+            </div>
+            <div className="p-6">
+              <button 
+                className={`w-full py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 ${
+                  profileCompleted 
+                    ? 'bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white' 
+                    : 'bg-gray-400 text-gray-600 cursor-not-allowed'
+                }`}
+                disabled={!profileCompleted}
+              >
+                {profileCompleted ? '📈 View Insights' : '📋 Complete Profile First'}
               </button>
             </div>
           </div>
         </div>
-      </main>
+
+        {/* Profile Settings Section */}
+        <div className="bg-white rounded-2xl shadow-lg p-8 text-center">
+          <h3 className="text-2xl font-bold text-gray-800 mb-4 flex items-center justify-center">
+            <span className="mr-3">⚙️</span>
+            Profile Settings
+          </h3>
+          <p className="text-gray-700 text-lg mb-6">
+            Update your profile information and preferences to get better recommendations
+          </p>
+          <button
+            onClick={() => setShowProfileModal(true)}
+            className="px-8 py-3 bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white rounded-lg font-semibold transition-all duration-300 transform hover:scale-105"
+          >
+            {profileCompleted ? '✏️ Edit Profile' : '📝 Complete Profile'}
+          </button>
+        </div>
+      </div>
 
 
       <ProfileModal
