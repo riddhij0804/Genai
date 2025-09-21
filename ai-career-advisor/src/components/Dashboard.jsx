@@ -4,16 +4,26 @@ import { useNavigate } from "react-router-dom";
 import ProfileModal from './ProfileModal';
 
 export default function Dashboard() {
-  const { user, logout, profileCompleted, getUserProfile } = useAuth(); 
+  const { user, logout, profileCompleted, getUserProfile, checkProfileCompletion } = useAuth(); 
   const navigate = useNavigate();
   const [showProfileModal, setShowProfileModal] = useState(false); 
-  const [userProfile, setUserProfile] = useState(null); 
+  const [userProfile, setUserProfile] = useState(null);
 
   useEffect(() => {
     if (user && profileCompleted) {
       loadUserProfile();
     }
   }, [user, profileCompleted]);
+
+  // Add effect to recheck profile completion when modal closes
+  useEffect(() => {
+    if (user && !showProfileModal) {
+      // Small delay to ensure Firebase has updated
+      setTimeout(() => {
+        checkProfileCompletion(user.uid);
+      }, 1000);
+    }
+  }, [showProfileModal, user, checkProfileCompletion]);
 
   const loadUserProfile = async () => {
     const profile = await getUserProfile(user.uid);
@@ -28,6 +38,17 @@ export default function Dashboard() {
   const handleLogout = async () => {
     await logout();
     navigate("/login");
+  };
+
+  const refreshProfileStatus = async () => {
+    if (user) {
+      await checkProfileCompletion(user.uid);
+      await loadUserProfile();
+    }
+  };
+
+  const goToCareerRecommendations = () => {
+    navigate("/career-recommendations");
   };
 
   const goHome = () => {
@@ -68,12 +89,20 @@ export default function Dashboard() {
                 Help us provide better career guidance by completing your profile.
               </p>
             </div>
-            <button
-              onClick={() => setShowProfileModal(true)}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium"
-            >
-              Complete Profile
-            </button>
+            <div className="flex gap-2">
+              <button
+                onClick={refreshProfileStatus}
+                className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg font-medium text-sm"
+              >
+                🔄 Refresh
+              </button>
+              <button
+                onClick={() => setShowProfileModal(true)}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium"
+              >
+                Complete Profile
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -91,6 +120,27 @@ export default function Dashboard() {
 
           {/* Placeholder for future dashboard widgets */}
           <div className="mt-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {/* NEW: Career Recommendations Card */}
+            <div className="bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-800 dark:to-pink-800 p-4 rounded-lg shadow text-center">
+              <h3 className="font-bold text-gray-800 dark:text-white flex items-center justify-center">
+                <span className="mr-2">🎯</span>
+                AI Career Recommendations
+              </h3>
+              <p className="text-gray-700 dark:text-gray-300 mt-2">Get personalized career suggestions based on your profile.</p>
+
+              <button 
+                onClick={goToCareerRecommendations}
+                className={`mt-3 px-4 py-2 rounded font-medium ${
+                  profileCompleted 
+                    ? 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white' 
+                    : 'bg-gray-400 text-gray-600 cursor-not-allowed'
+                }`}
+                disabled={!profileCompleted}
+              >
+                {profileCompleted ? '✨ Get Recommendations' : 'Complete Profile First'}
+              </button>
+            </div>
+
             <div className="bg-blue-100 dark:bg-blue-800 p-4 rounded-lg shadow text-center">
               <h3 className="font-bold text-gray-800 dark:text-white">Career Roadmap</h3>
               <p className="text-gray-700 dark:text-gray-300 mt-2">View and track your career plan.</p>

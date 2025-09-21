@@ -3,7 +3,7 @@ import { db } from '../firebase';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { useAuth } from '../contexts/AuthContext';
 
-const ProfileModal = ({ isOpen, onClose, onSkip }) => {
+const ProfileModal = ({ isOpen, onClose, onSkip, onProfileComplete }) => {
   const { user, checkProfileCompletion } = useAuth();
   const [currentStep, setCurrentStep] = useState(0);
   const [stage, setStage] = useState('');
@@ -148,22 +148,28 @@ const ProfileModal = ({ isOpen, onClose, onSkip }) => {
     };
     
     console.log('Saving to Firestore...');
-    // Just save to Firestore - don't wait for checkProfileCompletion
+    // Save to Firestore
     await setDoc(doc(db, 'userProfiles', user.uid), userProfileData);
     console.log('Save complete!');
     
-    // Show success immediately
+    // Show success briefly
     setShowSuccessPopup(true);
     
-    // Run checkProfileCompletion in background without waiting
-    checkProfileCompletion(user.uid).catch(err => console.log('Background check failed:', err));
-    
-    // Auto-close after 1.5 seconds
+    // Wait a moment then trigger career recommendations
     setTimeout(() => {
       setShowSuccessPopup(false);
       setIsSubmitting(false);
-      onClose();
+      
+      // Pass the complete profile data to trigger career recommendations
+      if (onProfileComplete) {
+        onProfileComplete(userProfileData);
+      } else {
+        onClose();
+      }
     }, 1500);
+    
+    // Run checkProfileCompletion in background
+    checkProfileCompletion(user.uid).catch(err => console.log('Background check failed:', err));
     
   } catch (error) {
     console.error('Error saving profile:', error);

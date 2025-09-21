@@ -19,11 +19,15 @@ export function AuthProvider({ children }) {
       if (docSnap.exists()) {
         const profileData = docSnap.data();
         setUserProfile(profileData);
-        // Consider profile complete if they have at least stage and name
-        setProfileCompleted(!!profileData.stage && !!profileData.name);
+        // Consider profile complete if they have completed flag or essential data
+        const isComplete = profileData.completed || 
+          (!!profileData.stage && !!profileData.fullName);
+        setProfileCompleted(isComplete);
+        console.log('Profile completion check:', isComplete, profileData);
       } else {
         setUserProfile(null);
         setProfileCompleted(false);
+        console.log('No profile found');
       }
     } catch (error) {
       console.error('Error checking profile:', error);

@@ -3,6 +3,7 @@ import { AuthProvider } from './contexts/AuthContext';
 import Login from "./components/Login";
 import Home from "./components/Home";
 import Dashboard from "./components/Dashboard";
+import CareerRecommendationPage from "./components/CareerRecommendationPage";
 import OnboardingFlow from './components/OnboardingFlow'; 
 import ProtectedRoute from "./components/ProtectedRoute";
 import './App.css';
@@ -31,6 +32,16 @@ export default function App() {
               element={
                 <ProtectedRoute>
                   <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Career Recommendations Page */}
+            <Route
+              path="/career-recommendations"
+              element={
+                <ProtectedRoute>
+                  <CareerRecommendationPage />
                 </ProtectedRoute>
               }
             />
