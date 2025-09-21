@@ -3,33 +3,27 @@ import axios from "axios";
 import cors from "cors";
 import dotenv from "dotenv";
 import process from 'process';
-import path from "path";
-import { fileURLToPath } from "url";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const PORT = process.env.PORT || 5000;
-
-
-
 
 dotenv.config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+import path from "path";
+import { fileURLToPath } from "url";
 
-// Serve built React app
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Serve static files from React build
 app.use(express.static(path.join(__dirname, "dist")));
 
+// Make sure API routes work, and all other routes return index.html
 app.get("*", (req, res, next) => {
-  if (req.path.startsWith("/generate") || req.path.startsWith("/recommend") || req.path.startsWith("/analyze-profile") || req.path.startsWith("/action-plan")) {
-    return next();
-  }
+  const apiRoutes = ["/generate", "/recommend", "/analyze-profile", "/action-plan"];
+  if (apiRoutes.some(route => req.path.startsWith(route))) return next();
   res.sendFile(path.join(__dirname, "dist", "index.html"));
 });
-
 
 // Existing /generate endpoint
 app.post("/generate", async (req, res) => {
@@ -249,11 +243,29 @@ app.post("/analyze-profile", async (req, res) => {
 
     const responseText = response.data.candidates[0].content.parts[0].text;
     
-    // Clean and parse JSON response
+    // Clean and parse JSON response - remove markdown code blocks
     let cleanedResponse = responseText.trim();
-    if (cleanedResponse.startsWith('json')) {
-      cleanedResponse = cleanedResponse.replace(/json\n?/, '').replace(/\n?```$/, '');
+    
+    // Remove all variations of markdown code blocks
+    cleanedResponse = cleanedResponse.replace(/^```json\s*/i, ''); // Remove ```json at start (case insensitive)
+    cleanedResponse = cleanedResponse.replace(/^```\s*/, ''); // Remove ``` at start
+    cleanedResponse = cleanedResponse.replace(/\s*```$/g, ''); // Remove ``` at end
+    cleanedResponse = cleanedResponse.replace(/```.*$/gm, ''); // Remove any remaining ``` lines
+    
+    // Remove any non-JSON text before the first [ or {
+    const jsonStart = cleanedResponse.search(/[\[\{]/);
+    if (jsonStart > 0) {
+      cleanedResponse = cleanedResponse.substring(jsonStart);
     }
+    
+    // Remove any non-JSON text after the last ] or }
+    const jsonEnd = Math.max(cleanedResponse.lastIndexOf(']'), cleanedResponse.lastIndexOf('}'));
+    if (jsonEnd > 0 && jsonEnd < cleanedResponse.length - 1) {
+      cleanedResponse = cleanedResponse.substring(0, jsonEnd + 1);
+    }
+    
+    console.log('Original response:', responseText.substring(0, 100) + '...');
+    console.log('Cleaned response:', cleanedResponse.substring(0, 200) + '...');
     
     try {
       const careers = JSON.parse(cleanedResponse);

@@ -1,13 +1,7 @@
-/** @type {import('tailwindcss').Config} */
-export default {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,jsx,ts,tsx}"
-  ],
-  theme: {
-    extend: {},
-  },
-  plugins: [],
-  // Add this line to make Tailwind work correctly when deployed under relative paths
-  darkMode: 'class', // optional if you use dark mode
-}
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+
+export default defineConfig({
+  base: './',      // ← ensures assets load correctly on Render
+  plugins: [react()],
+})
