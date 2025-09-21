@@ -19,11 +19,10 @@ const __dirname = path.dirname(__filename);
 app.use(express.static(path.join(__dirname, "dist")));
 
 // Make sure API routes work, and all other routes return index.html
-app.get("*", (req, res, next) => {
-  const apiRoutes = ["/generate", "/recommend", "/analyze-profile", "/action-plan"];
-  if (apiRoutes.some(route => req.path.startsWith(route))) return next();
+app.get(/^(?!\/(generate|recommend|analyze-profile|action-plan)).*$/, (req, res) => {
   res.sendFile(path.join(__dirname, "dist", "index.html"));
 });
+
 
 // Existing /generate endpoint
 app.post("/generate", async (req, res) => {
