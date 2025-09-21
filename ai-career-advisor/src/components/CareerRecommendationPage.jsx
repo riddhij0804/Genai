@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const CareerRecommendationPage = () => {
+  const navigate = useNavigate();
   const { user, getUserProfile } = useAuth();
   const [careers, setCareers] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -197,7 +199,22 @@ const CareerRecommendationPage = () => {
 
                   {/* Card Footer */}
                   <div className="px-6 pb-6">
-                    <button className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-3 rounded-lg font-semibold hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105">
+                    <button 
+                      onClick={() => {
+                        // Navigate to action plan page with selected career and skills
+                        navigate('/action-plan', {
+                          state: {
+                            careers: [career.title],
+                            skills: profileData.stage === 'School' 
+                              ? profileData.favoriteSubjects || [] 
+                              : profileData.stage === 'College' 
+                                ? profileData.currentSkills || [] 
+                                : profileData.coreSkills || []
+                          }
+                        });
+                      }}
+                      className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-3 rounded-lg font-semibold hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105"
+                    >
                       📋 Generate Action Plan
                     </button>
                   </div>
@@ -237,6 +254,8 @@ const CareerRecommendationPage = () => {
             </div>
           </div>
         )}
+
+
       </div>
     </div>
   );

@@ -4,6 +4,7 @@ import Login from "./components/Login";
 import Home from "./components/Home";
 import Dashboard from "./components/Dashboard";
 import CareerRecommendationPage from "./components/CareerRecommendationPage";
+import ActionPlanPage from "./components/ActionPlanPage";
 import OnboardingFlow from './components/OnboardingFlow'; 
 import ProtectedRoute from "./components/ProtectedRoute";
 import './App.css';
@@ -42,6 +43,16 @@ export default function App() {
               element={
                 <ProtectedRoute>
                   <CareerRecommendationPage />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Action Plan Page */}
+            <Route
+              path="/action-plan"
+              element={
+                <ProtectedRoute>
+                  <ActionPlanPage />
                 </ProtectedRoute>
               }
             />

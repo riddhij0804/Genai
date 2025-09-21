@@ -2,6 +2,7 @@ import express from "express";
 import axios from "axios";
 import cors from "cors";
 import dotenv from "dotenv";
+import process from 'process';
 
 dotenv.config();
 
@@ -258,6 +259,50 @@ app.post("/analyze-profile", async (req, res) => {
   } catch (error) {
     console.error('Profile Analysis Error:', error.response?.data || error.message);
     res.status(500).json({ error: "Failed to analyze profile and generate recommendations" });
+  }
+});
+
+// Import action plan generator
+import { generateActionPlan } from './src/actionPlanGenerator.js';
+
+// Action Plan Generation Endpoint
+app.post('/action-plan', async (req, res) => {
+  const { careers, skills } = req.body;
+  
+  if (!careers || !Array.isArray(careers) || careers.length === 0) {
+    return res.status(400).json({ error: "Please provide at least one career" });
+  }
+  
+  try {
+    console.log(`Generating action plan for careers: ${careers.join(", ")}`);
+    const actionPlan = await generateActionPlan(careers, skills || []);
+    
+    if (actionPlan.error) {
+      console.error('Action Plan Error:', actionPlan.error);
+      
+      // Check for API quota errors and provide a better user message
+      if (actionPlan.error.includes("quota") || actionPlan.error.includes("429")) {
+        return res.status(429).json({ 
+          error: "API rate limit reached. Using simplified career plan instead.",
+          limitExceeded: true
+        });
+      }
+      
+      return res.status(500).json({ error: actionPlan.error });
+    }
+    
+    // Check if this is a fallback response
+    if (actionPlan.note && actionPlan.note.includes("simplified action plan due to AI service limitations")) {
+      res.json({
+        ...actionPlan,
+        limitExceeded: true
+      });
+    } else {
+      res.json(actionPlan);
+    }
+  } catch (error) {
+    console.error('Action Plan Generation Error:', error);
+    res.status(500).json({ error: "Failed to generate action plan" });
   }
 });
 
